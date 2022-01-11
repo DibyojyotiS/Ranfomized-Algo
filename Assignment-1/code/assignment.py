@@ -16,34 +16,48 @@ def Qusetion1():
 
     def time_single_sort(sortingAlgo, arr):
         t1 = timer()
-        sortingAlgo(arr)
+        _, numcomparisons = sortingAlgo(arr)
         t2 = timer()
-        return t1-t2 # in nano-seconds
+        return numcomparisons, t1-t2 # in nano-seconds
 
     def time_double_sort(sortingAlgo, arr):
         t1 = timer()
         sortingAlgo(arr)
         sortingAlgo(arr)
         t2 = timer()
-        return t1-t2 # in nano-seconds        
+        return t1-t2 # in nano-seconds    
+
+    def incrementCounter(counter, data):
+        for i,d in enumerate(data):
+            counter[i] += d    
 
     # will run experiments for the following list of n
     # each experiemnt will be repeated about K=1000 times
     list_n = [int(10**x) for x in range(2,7)]
     K = 1000
     
-    times_QuickSort = []
-    times_RandomizedQuickSort = []
+    avgtimes_QuickSort = []
+    avgtimes_RandomizedQuickSort = []
     # get sorting times
     for n in list_n:
-        arr = generate_randomlist(n)    
+        arr = generate_randomlist(n) 
+        # accumulators
+        counters_deterministic = [0,0,0] 
+        counters_randomized = [0,0,0]    
         # run K times 
         for k in range(K):
             # for deterministc-quicksort
-            single_sort_t = time_single_sort(QuickSort, arr)
+            numcomparisons, single_sort_t = time_single_sort(QuickSort, arr)
             double_sort_t = time_double_sort(QuickSort, arr)
-            times_QuickSort.append((single_sort_t, double_sort_t))
+            incrementCounter(counters_deterministic, 
+                            (numcomparisons/K, single_sort_t/K, double_sort_t/K))
+
+
             # for randomized-quicksort
-            single_sort_t = time_single_sort(QuickSort, arr)
+            numcomparisons, single_sort_t = time_single_sort(QuickSort, arr)
             double_sort_t = time_double_sort(QuickSort, arr)            
-            times_RandomizedQuickSort.append((single_sort_t, double_sort_t))
+            incrementCounter(counters_randomized, 
+                            (numcomparisons/K, single_sort_t/K, double_sort_t/K))
+
+    # plots
+
