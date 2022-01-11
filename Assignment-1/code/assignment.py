@@ -34,7 +34,7 @@ def Qusetion1():
     # will run experiments for the following list of n
     # each experiemnt will be repeated about K=1000 times
     list_n = [int(10**x) for x in range(2,7)]
-    K = 1000
+    K = 10
     
     avgtimes_QuickSort = []
     avgtimes_RandomizedQuickSort = []
@@ -51,13 +51,16 @@ def Qusetion1():
             double_sort_t = time_double_sort(QuickSort, arr)
             incrementCounter(counters_deterministic, 
                             (numcomparisons/K, single_sort_t/K, double_sort_t/K))
-
-
             # for randomized-quicksort
-            numcomparisons, single_sort_t = time_single_sort(QuickSort, arr)
-            double_sort_t = time_double_sort(QuickSort, arr)            
+            numcomparisons, single_sort_t = time_single_sort(RandomizedQuickSort, arr)
+            double_sort_t = time_double_sort(RandomizedQuickSort, arr)            
             incrementCounter(counters_randomized, 
                             (numcomparisons/K, single_sort_t/K, double_sort_t/K))
 
     # plots
+    print(avgtimes_QuickSort)
+    print(avgtimes_RandomizedQuickSort)
 
+
+if __name__ == "__main__":
+    Qusetion1()
