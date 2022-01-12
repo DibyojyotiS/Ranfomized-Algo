@@ -34,39 +34,40 @@ def Qusetion1():
 
     def incrementCounter(counter, data):
         for i,d in enumerate(data):
-            counter[i] += d    
+            counter[i] += d
+        return  
 
-    # will run experiments for the following list of n
-    # each experiemnt will be repeated about K=1000 times
-    list_n = [int(10**x) for x in range(2,7)]
-    K = 500
-    
-    avgtimes_QuickSort = []
-    avgtimes_RandomizedQuickSort = []
-    # get sorting times
-    for n in list_n:
-        arr = generate_randomlist(n) 
-        print(n)
-        # accumulators
-        counters_deterministic = [0,0,0] #conparisons, single_t, double_t
-        counters_randomized = [0,0,0]    
-        # run K times 
-        for k in range(K):
-            # for deterministc-quicksort
-            numcomparisons, single_sort_t = time_single_sort(QuickSort, arr)
-            double_sort_t = time_double_sort(QuickSort, arr)
-            incrementCounter(counters_deterministic, 
-                            (numcomparisons/K, single_sort_t/K, double_sort_t/K))
-            # for randomized-quicksort
-            numcomparisons, single_sort_t = time_single_sort(RandomizedQuickSort, arr)
-            double_sort_t = time_double_sort(RandomizedQuickSort, arr)            
-            incrementCounter(counters_randomized, 
-                            (numcomparisons/K, single_sort_t/K, double_sort_t/K))
-        avgtimes_QuickSort.append(counters_deterministic)
-        avgtimes_RandomizedQuickSort.append(counters_randomized)
+    def runExperiemnt(sortingAlgo, list_n, K):
+        # will run experiments for the following list of n
+        # each experiemnt will be repeated about K times
+
+        print('running for', sortingAlgo.__name__)
+        
+        avgtimes = []
+        # get sorting times
+        for n in list_n:
+            arr = generate_randomlist(n) 
+            print(n)
+            # accumulators
+            counters = [0,0,0] #conparisons, single_t, double_t
+            # run K times 
+            for k in range(K):
+                # for deterministc-quicksort
+                numcomparisons, single_sort_t = time_single_sort(sortingAlgo, arr)
+                double_sort_t = time_double_sort(sortingAlgo, arr)
+                incrementCounter(counters, 
+                                (numcomparisons/K, single_sort_t/K, double_sort_t/K))
+
+            avgtimes.append(counters)
+        return avgtimes
 
     # print results
+    list_n = [10**x for x in range(2,5)]
+    avgtimes_QuickSort = runExperiemnt(QuickSort, list_n, K=500)
     print(avgtimes_QuickSort)
+
+    list_n = [10**x for x in range(2,7)]
+    avgtimes_RandomizedQuickSort = runExperiemnt(RandomizedQuickSort, list_n, K=500)
     print(avgtimes_RandomizedQuickSort)
 
     # save stuffs
