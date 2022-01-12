@@ -8,10 +8,11 @@ from time import perf_counter_ns as timer
 from deterministic_algos import QuickSort, MergeSort
 from randomied_algos import RandomizedQuickSort
 
+# run merge-sort, quick-sort and randomized-quick-sort
+# and save the data
 def assignment():
 
-    # this is no longer required
-    sys.setrecursionlimit(10**7)
+    sys.setrecursionlimit(10**7) # this is no longer required
 
     def generate_randomlist(n=10E6):
         n = int(n)
@@ -41,13 +42,21 @@ def assignment():
         with open(filname, 'w') as f:
             json.dump(data, f)
 
-    def runExperiemnt(sortingAlgo, list_n, K, filename=None):
+    # linear-extrapolation of double-sort times
+    def extrapolate(data, n):
+        n1,n2 = data['array-size'][-2:] 
+        t1,t2 = data['avg-double-sort-time-ns'][-2:]
+        t = t1 + (n - n1)/(n2-n1) * (t2 - t1)
+        return t
+
+    def runExperiemnt(sortingAlgo, list_n, K, filename=None, extrapolate_n = []):
         # will run experiments for the following list of n
         # each experiemnt will be repeated K times
 
         print('running for', sortingAlgo.__name__)
         
         data = {
+            'algo-name': sortingAlgo.__name__, # str
             'array-size': [], # list of floats/ints
             'avg-comparisons': [], # list of floats
             'avg-single-sort-time-ns': [], # list of floats
@@ -59,16 +68,25 @@ def assignment():
         for n in list_n:
             arr = generate_randomlist(n) 
             print(f'{n} : 0%', end='')
+
             # accumulators - stores the average
             counters = [0,0,0] #conparisons, single_t, double_t
             samples = {'comparisons':[], 
                         'single-sort-time-ns':[], 
                         'double-sort-time-ns':[]}
-            # run K times 
+
+            # if n is in extrapolate_n list then extrapolate 
+            # double sort time and dont run time_double_sort
+            run_doublesort = n not in extrapolate_n
+            if not run_doublesort: 
+                double_sort_t = extrapolate(data, n)
+
+            # run for K times 
             for k in range(K):
                 # for deterministc-quicksort
                 numcomparisons, single_sort_t = time_single_sort(sortingAlgo, arr)
-                double_sort_t = time_double_sort(sortingAlgo, arr)
+                if run_doublesort:
+                    double_sort_t = time_double_sort(sortingAlgo, arr)
                 samples['comparisons'].append(numcomparisons)
                 samples['single-sort-time-ns'].append(single_sort_t)
                 samples['double-sort-time-ns'].append(double_sort_t)
@@ -88,27 +106,46 @@ def assignment():
 
     # run experiemtns and results
     list_n = [10**x for x in range(2,7)]
-    avgtimes_RandomizedQuickSort = runExperiemnt(RandomizedQuickSort, list_n, K=500, 
+
+    data_RandomizedQuickSort = runExperiemnt(RandomizedQuickSort, list_n, K=500, 
                                         filename='randomized_quickSort_data.json')
-    print('rand-quick-sort:\n', avgtimes_RandomizedQuickSort['avg-comparisons'],
-                                avgtimes_RandomizedQuickSort['avg-single-sort-time-ns'],
-                                avgtimes_RandomizedQuickSort['avg-double-sort-time-ns'])
+    print('rand-quick-sort:\n', data_RandomizedQuickSort['avg-comparisons'],
+                                data_RandomizedQuickSort['avg-single-sort-time-ns'],
+                                data_RandomizedQuickSort['avg-double-sort-time-ns'])
 
-    list_n = [10**x for x in range(2,7)]
-    avgtimes_MergeSort = runExperiemnt(MergeSort, list_n, K=500, 
+
+    data_MergeSort = runExperiemnt(MergeSort, list_n, K=500, 
                                         filename='mergeSort_data.json')
-    print('merge-sort:\n', avgtimes_MergeSort['avg-comparisons'],
-                            avgtimes_MergeSort['avg-single-sort-time-ns'],
-                            avgtimes_MergeSort['avg-double-sort-time-ns'])
+    print('merge-sort:\n', data_MergeSort['avg-comparisons'],
+                            data_MergeSort['avg-single-sort-time-ns'],
+                            data_MergeSort['avg-double-sort-time-ns'])
 
-    list_n = [10**x for x in range(2,5)]
-    avgtimes_QuickSort = runExperiemnt(QuickSort, list_n, K=500, 
+
+    # extrapolate double-sort time for 10E5 and 10E6
+    data_QuickSort = runExperiemnt(QuickSort, list_n, K=500, 
+                                        extrapolate_n=[10**5, 10**7],
                                         filename='quickSort_data.json')
-    print('quick-sort:\n', avgtimes_QuickSort['avg-comparisons'],
-                            avgtimes_QuickSort['avg-single-sort-time-ns'],
-                            avgtimes_QuickSort['avg-double-sort-time-ns'])
+
+    print('quick-sort:\n', data_QuickSort['avg-comparisons'],
+                            data_QuickSort['avg-single-sort-time-ns'],
+                            data_QuickSort['avg-double-sort-time-ns'])
     
-    return 'done'
+    data_set = [data_QuickSort, data_MergeSort, data_RandomizedQuickSort]
+    return data_set
+
+
+# loads the json serealized data
+def load_dataset(file_names = [ 'randomized_quickSort_data.json',
+                                'mergeSort_data.json',
+                                'quickSort_data.json' ]):
+    data_set = []
+    for filename in file_names:
+        with open(filename, 'r') as f:
+            data = json.load(f)
+            data_set.append(data)
+    return data_set
+
 
 if __name__ == "__main__":
-    assignment()
+    data_set = assignment() # run the experiments and get all the data
+    
