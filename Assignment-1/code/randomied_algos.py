@@ -37,6 +37,15 @@ def RandomizedQuickSort(arr:list):
 
 
 if __name__ == "__main__":
-    arr = [23,14,132,23,4,3,213,13,1234,221,14,2,23,21]
-    print(arr, '\n', RandomizedQuickSort([*arr]), '\n')
+    from random import uniform
+    import numpy as np
+    from time import perf_counter
+    n = int(10E6)
+    rand_list = np.random.uniform(0,1,n).tolist()
+    print('made rand list is size', n)
+
+    t1 = perf_counter()
+    RandomizedQuickSort([*rand_list])
+    t2 = perf_counter()
+    print('randomized-quick-sort',  t2-t1,'s\n')
 

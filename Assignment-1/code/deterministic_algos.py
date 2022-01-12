@@ -25,8 +25,22 @@ def QuickSort(arr:list):
             quicksort(arr, low, curr-1)
             quicksort(arr, curr+1, high)
 
+    def non_recursive_quicksort(arr, low, high):
+        nonlocal num_comparisons
+        call_stack = []
+        call_stack.append((low, high))
+        while call_stack:
+            low, high = call_stack.pop()
+            if low < high:
+                num_comparisons += 1
+                curr = partition(arr, low, high)
+                call_stack.append((low, curr-1))
+                call_stack.append((curr+1, high))
+
+
     if len(arr) <= 1: return arr
-    quicksort(arr, 0, len(arr)-1)
+    # quicksort(arr, 0, len(arr)-1)
+    non_recursive_quicksort(arr, 0, len(arr)-1)
     return arr, num_comparisons
 
 
@@ -78,7 +92,21 @@ def MergeSort(arr:list):
 
 
 if __name__ == "__main__":
-    arr = [23,14,132,23,4,3,213,13,1234,221,14,2,23,21]
-    print(arr, '\n', QuickSort([*arr]), '\n')
-    print(arr, '\n', MergeSort([*arr]), '\n')
+    from random import uniform
+    import numpy as np
+    from time import perf_counter
+    n = int(10E6)
+    rand_list = np.random.uniform(0,1,n).tolist()
+    print('made rand list')
+
+    t1 = perf_counter()
+    QuickSort([*rand_list])
+    t2 = perf_counter()
+    print('quick-sort',  t2-t1,'s\n')
+
+    t1 = perf_counter()
+    MergeSort([*rand_list])
+    t2 = perf_counter()
+    print('merge-sort',  t2-t1,'s\n')
+
 
