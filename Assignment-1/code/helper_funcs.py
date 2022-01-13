@@ -109,9 +109,9 @@ def runExperiemnt(sortingAlgo, list_n, K, filename=None, extrapolate_n = []):
 
 
 # loads the json serealized data
-def load_dataset(file_names = [ 'randomized_quickSort_data.json',
-                                'mergeSort_data.json',
-                                'quickSort_data.json' ]):
+def load_dataset(file_names = [ 'exp_data/randomized_quickSort_data.json',
+                                'exp_data/mergeSort_data.json',
+                                'exp_data/quickSort_data.json' ]):
     data_set = []
     for filename in file_names:
         with open(filename, 'r') as f:
