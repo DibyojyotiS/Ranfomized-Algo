@@ -7,7 +7,7 @@ from helper_funcs import runExperiemnt
 def assignment():
 
     # run experiemtns and results
-    list_n = [10**x for x in range(2,3)]
+    list_n = [10**x for x in range(2,7)]
 
     data_RandomizedQuickSort = runExperiemnt(RandomizedQuickSort, list_n, K=500, 
                                         filename='exp_data/randomized_quickSort_data.json')
