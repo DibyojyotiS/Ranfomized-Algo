@@ -16,16 +16,16 @@ def generate_randomlist(n=10E6):
     return rand_list
 
 # measure time for single sort
-def time_single_sort(sortingAlgo, arr):
-    temp_arr = [*arr] # copies the array
+def time_single_sort(sortingAlgo, arr:list):
+    temp_arr = arr.copy() # copies the array
     t1 = timer()
     _, numcomparisons = sortingAlgo(temp_arr)
     t2 = timer()
     return numcomparisons, t2-t1 # in nano-seconds
 
 # measure time for double sort
-def time_double_sort(sortingAlgo, arr):
-    temp_arr = [*arr] # copies the array
+def time_double_sort(sortingAlgo, arr:list):
+    temp_arr =  arr.copy() # copies the array
     t1 = timer()
     sortingAlgo(temp_arr)
     sortingAlgo(temp_arr) # run again on the sorted temp_arr
