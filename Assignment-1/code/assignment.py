@@ -7,17 +7,17 @@ from helper_funcs import runExperiemnt
 def assignment():
 
     # run experiemtns and results
-    list_n = [10**x for x in range(2,7)]
+    list_n = [10**x for x in range(2,3)]
 
     data_RandomizedQuickSort = runExperiemnt(RandomizedQuickSort, list_n, K=500, 
-                                        filename='randomized_quickSort_data.json')
+                                        filename='exp_data/randomized_quickSort_data.json')
     print('rand-quick-sort:\n', data_RandomizedQuickSort['avg-comparisons'],
                                 data_RandomizedQuickSort['avg-single-sort-time-ns'],
                                 data_RandomizedQuickSort['avg-double-sort-time-ns'])
 
 
     data_MergeSort = runExperiemnt(MergeSort, list_n, K=500, 
-                                        filename='mergeSort_data.json')
+                                        filename='exp_data/mergeSort_data.json')
     print('merge-sort:\n', data_MergeSort['avg-comparisons'],
                             data_MergeSort['avg-single-sort-time-ns'],
                             data_MergeSort['avg-double-sort-time-ns'])
@@ -26,7 +26,7 @@ def assignment():
     # extrapolate double-sort time for 10E5 and 10E6
     data_QuickSort = runExperiemnt(QuickSort, list_n, K=500, 
                                         extrapolate_n=[10**5, 10**6],
-                                        filename='quickSort_data.json')
+                                        filename='exp_data/quickSort_data.json')
 
     print('quick-sort:\n', data_QuickSort['avg-comparisons'],
                             data_QuickSort['avg-single-sort-time-ns'],

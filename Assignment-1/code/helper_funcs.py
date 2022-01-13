@@ -1,3 +1,4 @@
+import os
 import sys
 import json
 from numpy.random import uniform # rnd generator
@@ -16,16 +17,18 @@ def generate_randomlist(n=10E6):
 
 # measure time for single sort
 def time_single_sort(sortingAlgo, arr):
+    temp_arr = [*arr] # copies the array
     t1 = timer()
-    _, numcomparisons = sortingAlgo(arr)
+    _, numcomparisons = sortingAlgo(temp_arr)
     t2 = timer()
     return numcomparisons, t2-t1 # in nano-seconds
 
 # measure time for double sort
 def time_double_sort(sortingAlgo, arr):
+    temp_arr = [*arr] # copies the array
     t1 = timer()
-    sortingAlgo(arr)
-    sortingAlgo(arr)
+    sortingAlgo(temp_arr)
+    sortingAlgo(temp_arr) # run again on the sorted temp_arr
     t2 = timer()
     return t2-t1 # in nano-seconds    
 
@@ -36,8 +39,10 @@ def incrementCounter(counter:list, data):
     return
 
 # save json-serialized data
-def save_json(filname, data):
-    with open(filname, 'w') as f:
+def save_json(filename, data):
+    head, tail = os.path.split(filename)
+    if head and not os.path.exists(head): os.makedirs(head)
+    with open(filename, 'w') as f:
         json.dump(data, f)
 
 # linear-extrapolation of double-sort times
