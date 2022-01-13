@@ -25,7 +25,7 @@ def assignment():
 
     # extrapolate double-sort time for 10E5 and 10E6
     data_QuickSort = runExperiemnt(QuickSort, list_n, K=500, 
-                                        extrapolate_n=[10**5, 10**7],
+                                        extrapolate_n=[10**5, 10**6],
                                         filename='quickSort_data.json')
 
     print('quick-sort:\n', data_QuickSort['avg-comparisons'],
