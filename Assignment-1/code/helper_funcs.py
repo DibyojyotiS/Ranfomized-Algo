@@ -122,8 +122,8 @@ def load_dataset(file_names = [ 'exp_data/randomized_quickSort_data.json',
     return data_set
 
 
-# returns the number of times a sorting fn 
-# from data1 outperformed that of data2
+# prints and returns the number of times the  
+# sorting fn from data1 outperformed that of data2
 def print_num_times_outperformed(data1, data2):
     arraysize1 = data1['array-size']
     arraysize2 = data2['array-size']
@@ -165,3 +165,22 @@ def print_formated(data):
         data['avg-comparisons']
     )]
     print(tabulate(pretty_list, headers=header, floatfmt=".3f"))
+
+
+# print and return stats on deviation for the mean for the given data
+def print_deviation_stats(data):
+    array_sizes = data['array-size']
+    avg_runtimes = data['avg-single-sort-time-ns']
+    stumps = [5, 10, 20, 30, 50, 100] # ratios in percentage
+    return_dict = {'array-size':array_sizes}
+    for k in stumps: return_dict[f'ex_{k}%']=[]
+    for i,n in enumerate(array_sizes):
+        runtimes = data['raw-samples'][i]['single-sort-time-ns']
+        runtimes = np.array(runtimes)
+        ratios = runtimes/avg_runtimes[i] - 1
+        for k in stumps:
+            return_dict[f'ex_{k}%'].append(sum(ratios > k/100))
+
+    print(f'\n>>> {data["algo-name"]}: count of times it exceeds mean by k%')
+    print(tabulate(return_dict, headers=return_dict.keys()))
+    return return_dict

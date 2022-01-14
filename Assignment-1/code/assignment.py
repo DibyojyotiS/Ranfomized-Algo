@@ -46,4 +46,5 @@ if __name__ == "__main__":
     # number of times merge-sort outperformed quick-sort
     print_num_times_outperformed(data_set[1], data_set[2])
 
-    # 
+    # deviations
+    print_deviation_stats(data_set[0])
