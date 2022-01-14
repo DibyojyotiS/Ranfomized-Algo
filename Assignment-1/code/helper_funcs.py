@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import numpy as np
+import matplotlib.pyplot as plt
 from tabulate import tabulate
 from numpy.random import uniform # rnd generator
 from time import perf_counter_ns as timer # timer for benchmarking
@@ -184,3 +185,16 @@ def print_deviation_stats(data):
     print(f'\n>>> {data["algo-name"]}: count of times it exceeds mean by k%')
     print(tabulate(return_dict, headers=return_dict.keys()))
     return return_dict
+
+
+# draw histogram given experiemnt data
+def draw_hist(data):
+    algo_name = data['algo-name']
+    tmp = []
+    for i,n in enumerate(data['array-size']):
+        samples = data['raw-samples'][i]['single-sort-time-ns']
+        samples = np.array(samples)/(2*n*np.log(n))
+        tmp.extend(samples)
+    plt.hist(tmp, 50)
+    plt.title(algo_name)
+    plt.show()
