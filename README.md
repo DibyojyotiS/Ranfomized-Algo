@@ -1,2 +1,2 @@
-# Ranfomized-Algo
+# Randomized-Algo
 Assignments of randomized-algos
