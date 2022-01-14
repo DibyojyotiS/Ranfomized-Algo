@@ -126,4 +126,5 @@ dmypy.jsons
 
 # my private stuff
 .temp_stuffs
-.docx
+*.docx
+*.tmp
