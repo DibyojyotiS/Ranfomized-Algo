@@ -1,6 +1,8 @@
 import os
 import sys
 import json
+import numpy as np
+from tabulate import tabulate
 from numpy.random import uniform # rnd generator
 from time import perf_counter_ns as timer # timer for benchmarking
 
@@ -118,3 +120,48 @@ def load_dataset(file_names = [ 'exp_data/randomized_quickSort_data.json',
             data = json.load(f)
             data_set.append(data)
     return data_set
+
+
+# returns the number of times a sorting fn 
+# from data1 outperformed that of data2
+def print_num_times_outperformed(data1, data2):
+    arraysize1 = data1['array-size']
+    arraysize2 = data2['array-size']
+    
+    sizearray = arraysize1
+    if len(arraysize1) > len(arraysize2):
+        sizearray = arraysize2
+
+    num_outperformes = []
+    for i,n in enumerate(sizearray):
+        raw_samples_1 = data1['raw-samples'][i]['single-sort-time-ns']
+        raw_samples_2 = data2['raw-samples'][i]['single-sort-time-ns']
+
+        # outperformes if runtime is lesser
+        n_outperform = sum(np.array(raw_samples_1) < np.array(raw_samples_2))
+        num_outperformes.append(n_outperform)
+
+    
+    data =  {
+        'array-size': sizearray,
+        'num-outperforms': num_outperformes
+    }
+
+    print('\n>>> number of times', data1['algo-name'],
+                    'outperfromed', data2['algo-name'])
+    print(tabulate(data, headers=['n', 'num-outperfroms']))
+
+    return data
+
+
+# print the data formated as n, single-t, double-sort-t, comparisons
+def print_formated(data):
+    print('\n>>>', data['algo-name'])
+    header = ['n', 'single-t', 'double-sort-t', 'comparisons']
+    pretty_list = [*zip(
+        data['array-size'],
+        data['avg-single-sort-time-ns'],
+        data['avg-double-sort-time-ns'],
+        data['avg-comparisons']
+    )]
+    print(tabulate(pretty_list, headers=header, floatfmt=".3f"))

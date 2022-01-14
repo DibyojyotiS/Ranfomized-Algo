@@ -1,6 +1,8 @@
 from deterministic_algos import QuickSort, MergeSort
 from randomied_algos import RandomizedQuickSort
-from helper_funcs import runExperiemnt
+from helper_funcs import *
+
+RUN_SORTS = False # set to True to run the sorts
 
 # run merge-sort, quick-sort and randomized-quick-sort
 # and save the data
@@ -32,9 +34,14 @@ def assignment():
                             data_QuickSort['avg-single-sort-time-ns'],
                             data_QuickSort['avg-double-sort-time-ns'])
     
-    data_set = [data_QuickSort, data_MergeSort, data_RandomizedQuickSort]
+    data_set = [data_RandomizedQuickSort, data_MergeSort, data_QuickSort]
     return data_set
 
 
 if __name__ == "__main__":
-    data_set = assignment() # run the experiments and get all the data
+    if RUN_SORTS: data_set = assignment() # run the experiments and get all the data
+    else: data_set = load_dataset()
+    for data in data_set: print_formated(data)
+
+    # number of times merge-sort outperformed quick-sort
+    print_num_times_outperformed(data_set[1], data_set[2])
