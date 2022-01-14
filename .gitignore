@@ -124,5 +124,6 @@ venv.bak/
 .dmypy.json
 dmypy.jsons
 
-# my temporary folder
+# my private stuff
 .temp_stuffs
+.docx
