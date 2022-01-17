@@ -197,4 +197,6 @@ def draw_hist(data):
         tmp.extend(samples)
     plt.hist(tmp, 50)
     plt.title(algo_name)
+    plt.xlabel('T(n)/2nlogn')
+    plt.ylabel('frequency')
     plt.show()
