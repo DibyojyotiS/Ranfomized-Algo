@@ -49,5 +49,5 @@ if __name__ == "__main__":
     # deviations
     print_deviation_stats(data_set[0])
 
-    # # plots
-    # for data in data_set: draw_hist(data)
+    # plots
+    for data in data_set: draw_hist(data)
