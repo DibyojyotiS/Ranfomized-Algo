@@ -215,7 +215,7 @@ def make_plots(data_set:list):
     assert n > 0
     c = 3
     r = (n+c-1)//c
-    fig, axs = plt.subplots(r, c, figsize=(9,3))
+    fig, axs = plt.subplots(r, c, figsize=(3*c,3*r))
     for data, ax in zip(data_set, axs):
         draw_hist(data, ax)
     plt.tight_layout()
