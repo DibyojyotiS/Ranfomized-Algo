@@ -50,4 +50,4 @@ if __name__ == "__main__":
     print_deviation_stats(data_set[0])
 
     # plots
-    for data in data_set: draw_hist(data)
+    make_plots(data_set)

@@ -188,15 +188,35 @@ def print_deviation_stats(data):
 
 
 # draw histogram given experiemnt data
-def draw_hist(data):
+from matplotlib.axes import Axes
+def draw_hist(data, ax:Axes=None):
     algo_name = data['algo-name']
     tmp = []
     for i,n in enumerate(data['array-size']):
         samples = data['raw-samples'][i]['single-sort-time-ns']
         samples = np.array(samples)/(2*n*np.log(n))
         tmp.extend(samples)
-    plt.hist(tmp, 50)
-    plt.title(algo_name)
-    plt.xlabel('T(n)/2nlogn')
-    plt.ylabel('frequency')
+    if ax is None:
+        plt.hist(tmp, 50)
+        plt.title(algo_name)
+        plt.xlabel('T(n)/2nlogn')
+        plt.ylabel('frequency')
+        plt.show()
+
+    else:
+        ax.hist(tmp, 50)
+        ax.set_xlabel('T(n)/2nlogn')
+        ax.set_ylabel('frequency')
+        ax.set_title(algo_name)
+
+
+def make_plots(data_set:list):
+    n = len(data_set)
+    assert n > 0
+    c = 3
+    r = (n+c-1)//c
+    fig, axs = plt.subplots(r, c, figsize=(9,3))
+    for data, ax in zip(data_set, axs):
+        draw_hist(data, ax)
+    plt.tight_layout()
     plt.show()
