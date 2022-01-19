@@ -11,7 +11,7 @@ def assignment():
     # run experiemtns and results
     list_n = [10**x for x in range(2,7)]
 
-    data_RandomizedQuickSort = runExperiemnt(RandomizedQuickSort, list_n, K=500, 
+    data_RandomizedQuickSort = runExperiemnt(RandomizedQuickSort, list_n, K=500, fix_arr=True,
                                         filename='exp_data/randomized_quickSort_data.json')
     print('rand-quick-sort:\n', data_RandomizedQuickSort['avg-comparisons'],
                                 data_RandomizedQuickSort['avg-single-sort-time-ns'],

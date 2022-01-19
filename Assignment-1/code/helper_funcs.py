@@ -55,9 +55,10 @@ def extrapolate(data, n):
     t = t1 + (n - n1)/(n2-n1) * (t2 - t1)
     return t
 
-def runExperiemnt(sortingAlgo, list_n, K, filename=None, extrapolate_n = []):
+def runExperiemnt(sortingAlgo, list_n, K, filename=None, extrapolate_n = [], fix_arr=False):
     # will run experiments for the following list of n
     # each experiemnt will be repeated K times
+    # fix_arr should be True for randomized quick sort
 
     print('running for', sortingAlgo.__name__)
     
@@ -71,8 +72,7 @@ def runExperiemnt(sortingAlgo, list_n, K, filename=None, extrapolate_n = []):
     }
 
     # get sorting times
-    for n in list_n:
-        arr = generate_randomlist(n) 
+    for n in list_n: 
         print(f'{n} : 0%', end='')
 
         # accumulators - stores the average
@@ -87,8 +87,10 @@ def runExperiemnt(sortingAlgo, list_n, K, filename=None, extrapolate_n = []):
         if not run_doublesort: 
             double_sort_t = extrapolate(data, n)
 
+        arr = generate_randomlist(n)
         # run for K times 
         for k in range(K):
+            if k > 1 and not fix_arr: arr = generate_randomlist(n)
             # for deterministc-quicksort
             numcomparisons, single_sort_t = time_single_sort(sortingAlgo, arr)
             if run_doublesort:
@@ -189,13 +191,22 @@ def print_deviation_stats(data):
 
 # draw histogram given experiemnt data
 from matplotlib.axes import Axes
-def draw_hist(data, ax:Axes=None):
+def draw_hist(data, ax:Axes=None, seperate_n=False):
     algo_name = data['algo-name']
     tmp = []
     for i,n in enumerate(data['array-size']):
         samples = data['raw-samples'][i]['single-sort-time-ns']
         samples = np.array(samples)/(2*n*np.log(n))
         tmp.extend(samples)
+        if seperate_n:
+            tmp_fig = plt.figure()
+            plt.hist(samples, 50)
+            plt.title(algo_name + f' n={n}')
+            plt.xlabel('T(n)/2nlogn')
+            plt.ylabel('frequency')
+            plt.show()
+            plt.close(tmp_fig)
+
     if ax is None:
         plt.hist(tmp, 50)
         plt.title(algo_name)
