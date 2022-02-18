@@ -95,7 +95,7 @@ if __name__ == "__main__":
     from random import uniform
     import numpy as np
     from time import perf_counter
-    n = int(10E6)
+    n = int(1E6)
     rand_list = np.random.uniform(0,1,n).tolist()
     print('made rand list')
 
