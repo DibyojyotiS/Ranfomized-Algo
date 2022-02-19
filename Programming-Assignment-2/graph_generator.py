@@ -27,7 +27,7 @@ def make_graph(edge_probablity):
 
     # sample remaining edges
     edges.append(
-        ((torch.rand(size=(remaining_rands,)) < edge_probablity).nonzero() + i*gpu_batch)
+        ((torch.rand(size=(remaining_rands,)) < edge_probablity).nonzero() + num_itter*gpu_batch)
         ) # sampled edges    
     print()
     return edges
