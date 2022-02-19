@@ -9,7 +9,7 @@ def make_graph(edge_probablity):
 
     gpu_device = torch.device('cuda')
     cpu_device = torch.device('cpu')
-    gpu_batch = int(3E8)
+    gpu_batch = int(2E8)
     num_vertices=1E7
 
     max_edges = int(num_vertices*(num_vertices-1)/2)
@@ -23,7 +23,7 @@ def make_graph(edge_probablity):
     for i in range(num_itter):
         torch.rand(size=(gpu_batch,), device=gpu_device, out=buff) # sample uniforms
         edges.append(((buff < edge_probablity).nonzero() + i*gpu_batch).to(cpu_device)) # sampled edges
-        print(f'\r{(i+1)*100/num_itter:.2f}%, {len(edges)}, {i*gpu_batch}', end='')
+        print(f'\r{(i+1)*100/num_itter:.2f}%, {len(edges)}, {(i+1)*gpu_batch}', end='')
 
     # sample remaining edges
     edges.append(
