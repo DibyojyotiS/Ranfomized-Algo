@@ -17,13 +17,15 @@ def make_graph(edge_probablity):
     remaining_rands = max_edges%gpu_batch
     print(max_edges, num_itter, remaining_rands)
 
+    s = time.time()
     # sample the edges
     edges = []
     buff = torch.zeros((gpu_batch,), device=gpu_device)
     for i in range(num_itter):
         torch.rand(size=(gpu_batch,), device=gpu_device, out=buff) # sample uniforms
         edges.append(((buff < edge_probablity).nonzero() + i*gpu_batch).to(cpu_device)) # sampled edges
-        print(f'\r{(i+1)*100/num_itter:.2f}%, {len(edges)}, {(i+1)*gpu_batch}', end='')
+        esptime = time.time()-s
+        print(f'\r{(i+1)*100/num_itter:.2f}%, {len(edges)}, {(i+1)*gpu_batch}, timepersamp:,{esptime/(i+1)}, time:{esptime}', end='')
 
     # sample remaining edges
     edges.append(
