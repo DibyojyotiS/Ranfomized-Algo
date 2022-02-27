@@ -66,6 +66,9 @@ def watcher(queue:Queue):
             f.flush()
 
             plt.scatter(m[0],m[1])
+            plt.title('$S_{n,p}$ v/s $p$')
+            plt.xlabel('$p$')
+            plt.ylabel('$S_{n,p}$')
             plt.draw()
             plt.pause(0.00001)
 
