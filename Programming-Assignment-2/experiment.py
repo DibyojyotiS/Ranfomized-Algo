@@ -51,8 +51,9 @@ def worker(n, p, queue):
     queue.put([p, max_size, uf.num_sets, sizes])
     
 
-def watcher(queue:Queue):
-    with open('outputs.csv', 'w') as f:
+def watcher(queue:Queue, fname:str):
+    with open(fname, 'w') as f:
+        print('saving in', fname)
         csv_writer = writer(f)
         csv_writer.writerow(['p', 'max_size', 'num_components', 'sizes'])
 
@@ -84,12 +85,20 @@ if __name__ == '__main__':
 
     n = 1E7
     num_points = 20
-    num_repeats = 10
+    num_repeats = 20
+    num_parallel = 20
+
+    # vary p from (0, 2/n]
+    fname = 'outputs.csv'
     probs = [2*(i+1)/(n*num_points) for i in range(num_points)]
 
-    num_parallel = 10
+    # vary p in 0.9/n to 1.1/n
+    # fname = 'outputs-mid.csv'
+    # probs = [0.9/n + 0.2*x/(n*(num_points-1)) for x in range(num_points)]
+
+    num_parallel = min(num_parallel, num_repeats)
     pool =  mp.Pool(num_parallel)
-    listener = pool.apply_async(watcher, (queue,))
+    listener = pool.apply_async(watcher, (queue,fname))
 
     for p in probs:
         for r in range(0,num_repeats,num_parallel):
