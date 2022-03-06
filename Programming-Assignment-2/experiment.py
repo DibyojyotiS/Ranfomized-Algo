@@ -83,7 +83,7 @@ if __name__ == '__main__':
     queue = mp_manager.Queue()
 
     n = 1E7
-    num_points = 20
+    num_points = 40
     num_repeats = 20
     num_parallel = 20
 
