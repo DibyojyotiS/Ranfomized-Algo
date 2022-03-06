@@ -26,7 +26,6 @@ def worker_naive(n,p,queue):
 def worker(n, p, queue):
     # ref: Batagelj V, Brandes U. Efficient generation of large random 
     # networks. Physical Review E. 2005 Mar 11;71(3):036113.
-    
     # union-find to compute connected components 
     # while making the graph.
     uf = UnionFind(n)
@@ -100,6 +99,7 @@ if __name__ == '__main__':
     pool =  mp.Pool(num_parallel)
     listener = pool.apply_async(watcher, (queue,fname))
 
+    queue.put([0.0, 1, n, {1:n}]) # for p=0
     for p in probs:
         for r in range(0,num_repeats,num_parallel):
 
