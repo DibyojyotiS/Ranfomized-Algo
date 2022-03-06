@@ -18,7 +18,7 @@ plt.xlabel('$p$')
 plt.ylabel('$S_{n,p}$')
 plt.show()
 
-# for p <= 1/n
+# for p <= 0.9/n
 tempdata = data.loc[data['max_size'].index <= 0.9E-7]
 plt.scatter(tempdata['max_size'].index, tempdata['max_size'])
 plt.title('$S_{n,p}$ v/s $p$')
