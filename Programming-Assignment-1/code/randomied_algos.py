@@ -1,8 +1,7 @@
-# randomized algo 
+from random import randint
 
 # randomized quick-sort
 def RandomizedQuickSort(arr:list):
-    from random import randint
 
     num_comparisons = 0
 
